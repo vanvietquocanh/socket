@@ -4,9 +4,27 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
+var cors = require('cors')
+var mongoose =  require('/usr/lib/node_modules/mongoose');
+var pathdb = require('../database/mongodb.tempmail');
+var schedule = require('node-schedule');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var apiRouter = require('./routes/api');
+var wifiRouter = require('./routes/wifi');
+var donateRouter = require('./routes/donate');
+var toolRouter = require('./routes/tool');
+
+mongoose.connect(pathdb, {useUnifiedTopology: true, useNewUrlParser:true, useCreateIndex: true});
+
+//mongodb Connect
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open',()=>console.log("CONNECTED SUCCESS"));
+
+var clearMail = schedule.scheduleJob({hour : 0}, async function(){
+  
+})
 
 var app = express();
 app.io = require('socket.io')();
@@ -14,10 +32,10 @@ app.io = require('socket.io')();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors())
+// app.use(logger('dev'));
+app.use(express.json({limit: '2mb'}));
+app.use(express.urlencoded({ extended: true, limit: '2mb'}));
 app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
@@ -29,9 +47,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.io.sockets.on('connection', function (socket) {
   console.log("hello");
 });
-
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api', apiRouter);
+app.use('/donate', donateRouter);
+app.use('/tool', toolRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

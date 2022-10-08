@@ -1,18 +1,23 @@
 {
-  "name": "socket",
+  "name": "techispower",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/techispower"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "mongoose": "^5.12.10",
     "morgan": "~1.9.1",
     "node-sass-middleware": "0.11.0",
-    "socket.io": "^3.1.0"
+    "node-schedule": "^2.1.0",
+    "randomstring": "^1.2.1",
+    "socket.io": "^3.1.0",
+    "tesseract.js": "^2.1.5"
   }
 }
